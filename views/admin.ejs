@@ -1,0 +1,103 @@
+<html>
+	<!-- Bootstrap core CSS -->
+    <link href="/stylesheets/bootstrap.css" rel="stylesheet">
+	<!--<script type="text/javascript" src="./node_modules/ejs/ejs.js"></script>-->
+<body>
+
+	<div class="container">
+	<p>
+	<div class="panel panel-default">
+		<div class="panel-heading">Log Out</div>
+		<div class="panel-body">
+		<form role="logout" action="/logout" method="get">
+ 			<button class="btn btn-primary" type="submit">Log Out</button>   
+		</form>
+		</div>
+	</div>
+	<p>
+	<div class="panel panel-default">
+		<div class="panel-heading"> Add a New RSS Link</div>
+		<div class="panel-body">
+			<form role="form" action="/addRSS" method="post">
+				Link <input type="url" class="form-control" placeholder="RSS Link" required autofocus name="link">
+				Blog Name <input type="text" class="form-control" placeholder="Add an rss feed" name="blog_name">
+				Language 
+				<select class="form-control" name="region">
+				  
+				 <!-- <script id="users" type="text/template"> -->
+							<% if (region.length) { %>
+
+								<% region.forEach(function(item){ %>
+								<option> <%= item["REGION"] %></option>
+								<% }) %>
+							<% } %>
+				<!--	</script>-->
+				</select>
+				
+				Will be Shown?
+				<select class="form-control" name="show">
+					<option>true</option>
+					<option>false</option>
+				</select>
+				
+				Default Settings: Will be Shown, Global Feed
+				<button class="btn btn-lg btn-primary btn-block" type="submit">Add New Rss</button>   
+				
+				<script>
+					//ejs.render(document.getElementById('users').innerHTML, {name:['still', 'loading']});
+					/*onload = function(){
+						var users = document.getElementById('users').innerHTML;
+						var names = ['loki', 'tobi', 'jane'];
+						var html = ejs.render(users, { names: names });
+						document.body.innerHTML = html;
+					}*/
+				</script>
+			</form>
+		</div>
+	</div>
+	<div class="panel panel-default">
+		<div class="panel-heading"> All Blogs</div>
+		<div class="panel-body">
+			<table>
+				<% if (blog.length) { %>
+
+					<% blog.forEach(function(item){ %>
+						<tr>
+							<% for(var columnName in item) {%>
+								<td> <%= item[columnName] %></td>
+							<% } %>
+							<td> 
+								<form role="delete" action="/deleteBlog" method="post">
+									<input type="hidden" name="blog_id" value=<%= item["BLOG_ID"] %> >
+									<button class="btn btn-primary" type="submit">Delete</button>   
+								</form>
+							</td>
+						</tr>
+					<% }) %>
+				<% } %>
+			</table>
+		</div>
+	</div>
+	<div class="panel panel-default">
+		<div class="panel-heading"> All Blog Posts</div>
+		<div class="panel-body">
+			<table>
+				<% if (post.length) { %>
+
+					<% post.forEach(function(item){ %>
+						<tr>
+						<% for(var columnName in item) {%>
+							<td> <%= item[columnName] %></td>
+						<% } %>
+							
+						</tr>
+					<% }) %>
+				<% } %>
+			</table>
+		</div>
+	</div>
+	</div> <!-- /container -->
+</body
+
+
+</html>
