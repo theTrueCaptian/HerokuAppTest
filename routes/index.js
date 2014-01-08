@@ -49,13 +49,14 @@ var index = function(incoonn){
  	};
 
 	function grabNext(req, res){
+		console.log("page num from pg:"+req.query.page_num);
 		
-		grabNextPosts(req.body.blog_id, req.body.page_num,
+		grabNextPosts(req.query.blog_id, req.query.page_num,
 			function(err, result){ 	//callback for grabbing all posts
 				if(err){ 
 					console.log(""+err);
 				}else{
-					sendFile(display(result, req.body.page_num), res);
+					sendFile(display(result, req.query.page_num), res);
 				}
 			}
 		);
@@ -76,6 +77,7 @@ var index = function(incoonn){
 				total = total + "<p>"+json2html.transform(item["CONTENT"],transform) ;
 			})
 			//form for the next ten *******************
+			console.log("setting next page:"+(page_num+1));
 			total = total + "<p><form role=\"next\" action=\"/next\" method=\"get\"><input type=\"hidden\" name=\"page_num\" value="+(page_num+1)+" ><input type=\"hidden\" name=\"blog_id\" value="+last["BLOG_ID"]+" ><button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\">Next</button></form>   ";
 			console.log(total);
 			
@@ -89,9 +91,13 @@ var index = function(incoonn){
 	};
 	function grabNextPosts(blog_id, page, callback){//******************************************** edit
 		var startPt = page * 10;
-		console.log("start point:"+startPt);
-		var query = conn.query("SELECT * FROM \"BLOG_POST\" WHERE \"SHOW\"=true ORDER BY \"DATE\" DESC LIMIT "+startPt+", 10",callback);
+		console.log("start point:"+startPt+" "+page);
+		var query = conn.query("SELECT * FROM \"BLOG_POST\" WHERE \"SHOW\"=true ORDER BY \"DATE\" DESC LIMIT 10 OFFSET "+startPt,callback);
 		return query;
+		
+		/*Returning a range of rows from a table called employee (starting at record 2, return the next 4 rows): 
+
+			select * from employee limit 2,4*/
 	};
 	
 	return  {
