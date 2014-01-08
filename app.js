@@ -1,4 +1,4 @@
-var connectionString ="postgres://postgres:sesamestreet1@localhost:5432/hcdb" || "dbname=dbpsu0p5m1q0kt host=ec2-54-225-135-30.compute-1.amazonaws.com port=5432 user=qtplrjwwlajlru password=ReRrKSl0A8-mILhyUgJ43A8C8d sslmode=require";
+var connectionString =/*"postgres://postgres:sesamestreet1@localhost:5432/hcdb" || */"dbname=dbpsu0p5m1q0kt host=ec2-54-225-135-30.compute-1.amazonaws.com port=5432 user=qtplrjwwlajlru password=ReRrKSl0A8-mILhyUgJ43A8C8d sslmode=require";
 
 /**
  * Module dependencies.
