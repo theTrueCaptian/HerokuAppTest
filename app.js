@@ -1,4 +1,4 @@
-var connectionString =process.env.DATABASE_URL;// /*"postgres://postgres:sesamestreet1@localhost:5432/hcdb" || */"dbname=dbpsu0p5m1q0kt host=ec2-54-225-135-30.compute-1.amazonaws.com port=5432 user=qtplrjwwlajlru password=ReRrKSl0A8-mILhyUgJ43A8C8d sslmode=require";
+var connectionString =process.env.DATABASE_URL || "postgres://postgres:sesamestreet1@localhost:5432/hcdb" ; // || */"dbname=dbpsu0p5m1q0kt host=ec2-54-225-135-30.compute-1.amazonaws.com port=5432 user=qtplrjwwlajlru password=ReRrKSl0A8-mILhyUgJ43A8C8d sslmode=require";
 
 /**
  * Module dependencies.
@@ -21,7 +21,7 @@ conn.databaseConnect();
 var authpath = new require('./routes/authentication').authentication(conn);
 var admin = new require('./routes/admin.js').admin(conn);
 var indexpg =new require('./routes/index.js').index(conn);
-var menu = new require('./routes/menu').menu(authpath);
+var menu = new require('./routes/menu').menu(authpath, conn);
 								
 // passport to control sessions and whatnot
 var passport = require('passport')
@@ -61,7 +61,10 @@ if ('development' == app.get('env')) {
 
 app.get('/' , indexpg.indexfile);
 app.get( '/index', indexpg.indexfile);
+app.get( '/next', indexpg.grabNext);
 app.get('/aboutus', menu.aboutus);
+app.get('/faq', menu.faq);
+app.get('/directory', menu.directory);
 //app.get('/views/*', menu.menu);
 //app.get('/users', user.list);
 

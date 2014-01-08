@@ -1,10 +1,5 @@
 
- //Maeda Hanafi
-
-
-
-
-
+ //Maeda Hanafi 
 //var adminStatus = false;
 	
 var authentication = function(inconn){

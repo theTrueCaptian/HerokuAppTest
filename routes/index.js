@@ -26,28 +26,44 @@ var index = function(incoonn){
 				if(err){ 
 					console.log(""+err);
 				}else{
-					var total ="";
-					var resultrows = result.rows;
-					resultrows.forEach(function(item){
-						//console.log(item["CONTENT"]);
-						total = total + "<p>"+json2html.transform(item["CONTENT"],transform) ;
-					})
-					console.log(total);
+					if(result.rowCount>=1){
+						var total ="";
+						var resultrows = result.rows;
+						var last=result.rows[result.rowCount-1];
+						console.log("last:"+last);
+						resultrows.forEach(function(item){
+							//console.log(item["CONTENT"]);
+							total = total + "<p>"+json2html.transform(item["CONTENT"],transform) ;
+						})
+						//form for the next ten *******************
+						total = total + "<p><form role=\"next\" action=\"/next\" method=\"get\"><input type=\"hidden\" name=\"blog_id\" value="+last["BLOG_ID"]+" ><button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\">Next</button></form>   ";
+						console.log(total);
+						
+					}
 					sendFile(total, res);
 				}
-		
 			}
 		);
 		
  	};
 
+	function grabNext(req, res){
+		
+	};
+	
+	
 	function grabPosts( callback){
-		var query = conn.query("SELECT * FROM \"BLOG_POST\" WHERE \"SHOW\"=true ORDER BY \"DATE\" DESC LIMIT 20",callback);
+		var query = conn.query("SELECT * FROM \"BLOG_POST\" WHERE \"SHOW\"=true ORDER BY \"DATE\" DESC LIMIT 10",callback);
+		return query;
+	};
+	function grabNextPosts(blog_id, callback){//******************************************** edit
+		var query = conn.query("SELECT * FROM \"BLOG_POST\" WHERE \"SHOW\"=true ORDER BY \"DATE\" DESC LIMIT 10",callback);
 		return query;
 	};
 	
 	return  {
-		indexfile:indexfile
+		indexfile:indexfile,
+		grabNext:grabNext
 		}
 };
 //allow others to access this file

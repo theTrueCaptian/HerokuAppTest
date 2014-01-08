@@ -1,0 +1,27 @@
+<!-- Jumbotron -->
+<div class="jumbotron">
+	<h1>Hijab Central Directory</h1>
+	<p class="lead">Directory of all blogs we aggregate</p>
+	<p>This website automatically gathers blog posts related to Hijab from bloggers.</p>
+	<p>We gather content from RSS feeds from Hijab Bloggers and aggregate the content into one global news feed.
+
+</div>
+ 
+<div class="panel panel-default">
+	<div class="panel-heading"> All Blogs</div>
+	<div class="panel-body">
+		<table>
+			<% if (blog.length) { %>
+
+				<% blog.forEach(function(item){ %>
+					<tr>
+							<td> <%= item["BLOG_NAME"] %></td>
+							<td> <%= item["LINK"] %></td>
+						 
+						 
+					</tr>
+				<% }) %>
+			<% } %>
+		</table>
+	</div>
+</div>

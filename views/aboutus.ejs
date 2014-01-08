@@ -1,32 +1,41 @@
 <!-- Jumbotron -->
-  <div class="jumbotron">
-	<h1>Hijab Central</h1>
-	<p class="lead">A feed of posts from hijab blogs all over the world!</p>
-	<p>This website automatically gathers blog posts related to Hijab from bloggers.</p>
-  </div>
-
-  <!-- Example row of columns -->
-  <div class="row">
+	<div class="jumbotron">
+		<h1>Hijab Central</h1>
+		<p class="lead">A feed of posts from hijab blogs all over the world!</p>
+		<p>This website automatically gathers blog posts related to Hijab from bloggers.</p>
+		<p>We gather content from RSS feeds from Hijab Bloggers and aggregate the content into one global news feed.
 	
-	
-   <div class="col-lg-4">
-		<h2>Contact</h2>
-		<p>Suggestions? Complaints? Email me at my_pink_han@yahoo.com.</p>
-    </div>
-	<div class="col-lg-4">
-		<h2>Global Feed</h2>
-		<p>See the latest updates now.</p>
-		<p><a class="btn btn-primary" href="index" role="button">View &raquo;</a></p>
-   </div>
-	<div class="col-lg-4">
-		<% if (!admin) { %>
-			<h2>Admin Sign in</h2>
-			<p>Log in as an Administrator</p>
-			<p><a class="btn btn-primary" href="signin" role="button">Log In &raquo;</a></p>
-		<% }else{ %>
-			<h2>Admin Dashboard</h2>
-			<p>Manage Blogs, etc</p>
-			<p><a class="btn btn-primary" href="admin" role="button">Dashboard &raquo;</a></p>
-		<% } %>
 	</div>
-  </div>
+
+	<!-- Example row of columns -->
+	<div class="row">
+		<center>	
+		<div class="col-md-6">
+			<h2>FAQ</h2>
+			<p>Frequently Asked Questions</p>
+			<p><a class="btn btn-primary" href="faq" role="button">View &raquo;</a></p>
+		</div>
+		<div class="col-md-6">
+			<h2>Contact</h2>
+			<p>Suggestions? Complaints? Email me at my_pink_han@yahoo.com.</p>
+		</div>
+	</div>
+	<div class="row">
+		<center>
+		<div class="col-md-6">
+			<h2>Global Feed</h2>
+			<p>See the latest updates now.</p>
+			<p><a class="btn btn-primary" href="index" role="button">View &raquo;</a></p>
+		</div>
+		<div class="col-md-6">
+			<% if (!admin) { %>
+				<h2>Admin Sign in</h2>
+				<p>Log in as an Administrator</p>
+				<p><a class="btn btn-primary" href="signin" role="button">Log In &raquo;</a></p>
+			<% }else{ %>
+				<h2>Admin Dashboard</h2>
+				<p>Manage Blogs, etc</p>
+				<p><a class="btn btn-primary" href="admin" role="button">Dashboard &raquo;</a></p>
+			<% } %>
+		</div>
+	</div>
