@@ -77,8 +77,9 @@ var index = function(incoonn){
 				total = total + "<p>"+json2html.transform(item["CONTENT"],transform) ;
 			})
 			//form for the next ten *******************
-			console.log("setting next page:"+(page_num+1));
-			total = total + "<p><form role=\"next\" action=\"/next\" method=\"get\"><input type=\"hidden\" name=\"page_num\" value="+(page_num+1)+" ><input type=\"hidden\" name=\"blog_id\" value="+last["BLOG_ID"]+" ><button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\">Next</button></form>   ";
+			var next_page=parseInt(page_num)+1;
+			console.log("setting next page:"+(next_page));
+			total = total + "<p><form role=\"next\" action=\"/next\" method=\"get\"><input type=\"hidden\" name=\"page_num\" value="+next_page+" ><input type=\"hidden\" name=\"blog_id\" value="+last["BLOG_ID"]+" ><button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\">Next</button></form>   ";
 			console.log(total);
 			
 		}
@@ -89,15 +90,11 @@ var index = function(incoonn){
 		var query = conn.query("SELECT * FROM \"BLOG_POST\" WHERE \"SHOW\"=true ORDER BY \"DATE\" DESC LIMIT 10",callback);
 		return query;
 	};
-	function grabNextPosts(blog_id, page, callback){//******************************************** edit
+	function grabNextPosts(blog_id, page, callback){ 
 		var startPt = page * 10;
-		console.log("start point:"+startPt+" "+page);
-		var query = conn.query("SELECT * FROM \"BLOG_POST\" WHERE \"SHOW\"=true ORDER BY \"DATE\" DESC LIMIT 10 OFFSET "+startPt,callback);
+ 		var query = conn.query("SELECT * FROM \"BLOG_POST\" WHERE \"SHOW\"=true ORDER BY \"DATE\" DESC LIMIT 10 OFFSET "+startPt,callback);
 		return query;
-		
-		/*Returning a range of rows from a table called employee (starting at record 2, return the next 4 rows): 
-
-			select * from employee limit 2,4*/
+		 
 	};
 	
 	return  {
