@@ -88,7 +88,9 @@ var index = function(incoonn){
 		return query;
 	};
 	function grabNextPosts(blog_id, page, callback){//******************************************** edit
-		var query = conn.query("SELECT * FROM \"BLOG_POST\" WHERE \"SHOW\"=true ORDER BY \"DATE\" DESC LIMIT "+(page*10)+", 10",callback);
+		var startPt = page * 10;
+		console.log("start point:"+startPt);
+		var query = conn.query("SELECT * FROM \"BLOG_POST\" WHERE \"SHOW\"=true ORDER BY \"DATE\" DESC LIMIT "+startPt+", 10",callback);
 		return query;
 	};
 	
