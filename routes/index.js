@@ -19,14 +19,15 @@ var index = function(incoonn){
 	var indexfile = function(req, res){
 		var json2html = require('node-json2html');
  
-		var transform = {'tag':'p','html':'<div class=".col-md-4" ><div class="text-center"><div class="panel panel-default"><div class="panel-heading"><h2>${title} <p><small> By ${author}</small></h2></div> <div class="panel-body"> <p><div class="lead"> ${description} </div> <p>Blog source: ${link} <p> Date Published: ${pubdate} Update: ${date} </div></div></div></div>'};
+		var transform = {'tag':'p','html':'<div class=".col-md-4" ><div class="text-center"><div class="panel panel-default"><div class="panel-heading"><h2>${title} <p><small> By ${author}</small></h2></div> <div class="panel-body"> <p><div class="lead"> ${description} </div> <div class="panel-footer"><p>Blog source: ${link} <p> Date Published: ${pubdate} Update: ${date} </div></div></div></div></div>'};
    
 		grabPosts(
 			function(err, result){ 	//callback for grabbing all posts
 				if(err){ 
 					console.log(""+err);
 				}else{
-					if(result.rowCount>=1){
+					sendFile(display(result, 1), res);
+					/*if(result.rowCount>=1){
 						var total ="";
 						var resultrows = result.rows;
 						var last=result.rows[result.rowCount-1];
@@ -40,7 +41,7 @@ var index = function(incoonn){
 						console.log(total);
 						
 					}
-					sendFile(total, res);
+					sendFile(total, res);*/
 				}
 			}
 		);
@@ -49,15 +50,45 @@ var index = function(incoonn){
 
 	function grabNext(req, res){
 		
+		grabNextPosts(req.body.blog_id, req.body.page_num,
+			function(err, result){ 	//callback for grabbing all posts
+				if(err){ 
+					console.log(""+err);
+				}else{
+					sendFile(display(result, req.body.page_num), res);
+				}
+			}
+		);
 	};
 	
-	
+	function display(result, page_num ){
+		var json2html = require('node-json2html'); 
+		var transform = {'tag':'p','html':'<div class=".col-md-4" ><div class="text-center"><div class="panel panel-default"><div class="panel-heading"><h2>${title} <p><small> By ${author}</small></h2></div> <div class="panel-body"> <p><div class="lead"> ${description} </div> <div class="panel-footer"><p>Blog source: ${link} <p> Date Published: ${pubdate} Update: ${date} </div></div></div></div></div>'};
+		var total ="";
+		
+		if(result.rowCount>=1){
+			
+			var resultrows = result.rows;
+			var last=result.rows[result.rowCount-1];
+			console.log("last:"+last);
+			resultrows.forEach(function(item){
+				//console.log(item["CONTENT"]);
+				total = total + "<p>"+json2html.transform(item["CONTENT"],transform) ;
+			})
+			//form for the next ten *******************
+			total = total + "<p><form role=\"next\" action=\"/next\" method=\"get\"><input type=\"hidden\" name=\"page_num\" value="+(page_num+1)+" ><input type=\"hidden\" name=\"blog_id\" value="+last["BLOG_ID"]+" ><button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\">Next</button></form>   ";
+			console.log(total);
+			
+		}
+		return total;
+		
+	};
 	function grabPosts( callback){
 		var query = conn.query("SELECT * FROM \"BLOG_POST\" WHERE \"SHOW\"=true ORDER BY \"DATE\" DESC LIMIT 10",callback);
 		return query;
 	};
-	function grabNextPosts(blog_id, callback){//******************************************** edit
-		var query = conn.query("SELECT * FROM \"BLOG_POST\" WHERE \"SHOW\"=true ORDER BY \"DATE\" DESC LIMIT 10",callback);
+	function grabNextPosts(blog_id, page, callback){//******************************************** edit
+		var query = conn.query("SELECT * FROM \"BLOG_POST\" WHERE \"SHOW\"=true ORDER BY \"DATE\" DESC LIMIT "+(page*10)+", 10",callback);
 		return query;
 	};
 	

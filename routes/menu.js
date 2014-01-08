@@ -46,7 +46,7 @@ var menu = function( inauth, inconn){
 	};
 	
 	function getAllBlogs(callback){
-		var query = conn.query("SELECT \"BLOG_NAME\", \"LINK\" FROM \"BLOGS\"",callback);
+		var query = conn.query("SELECT \"BLOG_NAME\", \"LINK\" FROM \"BLOGS\" WHERE \"SHOW\"=true",callback);
 		return query;
 	};
 	return  {
