@@ -49,9 +49,9 @@ var index = function(incoonn){
  	};
 
 	function grabNext(req, res){
-		console.log("page num from pg:"+req.query.page_num);
+		console.log("date num from prev:"+req.query.blog_pubdate);
 		
-		grabNextPosts(req.query.blog_id, req.query.page_num,
+		grabNextPosts(req.query.blog_pubdate, req.query.page_num,
 			function(err, result){ 	//callback for grabbing all posts
 				if(err){ 
 					console.log(""+err);
@@ -64,23 +64,25 @@ var index = function(incoonn){
 	
 	function display(result, page_num ){
 		var json2html = require('node-json2html'); 
-		var transform = {'tag':'p','html':'<div class=".col-md-4" ><div class="text-center"><div class="panel panel-default"><div class="panel-heading"><h2>${title} <p><small> By ${author}</small></h2></div> <div class="panel-body"> <p><div class="lead"> ${description} </div> <div class="panel-footer"><p>Blog source: ${link} <p> Date Published: ${pubdate} Update: ${date} </div></div></div></div></div>'};
+		var transform = {'tag':'p','html':'<div class=".col-md-4" ><div class="text-center"><div class="panel panel-default"><div class="panel-heading"><h2>${title} <p><h3> By ${author}</h3></h2></div> <div class="panel-body"> <p><div class=""> ${description} </div> <div class="panel-footer"><p>Blog source: ${link} <p> Date Published: ${pubdate} Update: ${date} </div></div></div></div></div>'};
 		var total ="";
-		
+		var moment = require('moment');
+		moment().format();
 		if(result.rowCount>=1){
 			
 			var resultrows = result.rows;
 			var last=result.rows[result.rowCount-1];
-			console.log("last:"+last);
-			resultrows.forEach(function(item){
-				//console.log(item["CONTENT"]);
-				total = total + "<p>"+json2html.transform(item["CONTENT"],transform) ;
+			
+ 			resultrows.forEach(function(item){
+ 				total = total + "<p>"+json2html.transform(item["CONTENT"],transform) ;
 			})
 			//form for the next ten *******************
 			var next_page=parseInt(page_num)+1;
-			console.log("setting next page:"+(next_page));
-			total = total + "<p><form role=\"next\" action=\"/next\" method=\"get\"><input type=\"hidden\" name=\"page_num\" value="+next_page+" ><input type=\"hidden\" name=\"blog_id\" value="+last["BLOG_ID"]+" ><button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\">Next</button></form>   ";
-			console.log(total);
+			var newDate = moment(last["DATE"]).toISOString();//moment(last["DATE"],'ddd MM DD YYYY HH:mm:ss zzZZ');//'YYYYDDFMMonthHH12:MIam');
+ 			console.log("setting blog date:"+last["DATE"]+" "+newDate);
+		 
+			total = total + "<p><form role=\"next\" action=\"/next\" method=\"get\"><input type=\"hidden\" name=\"page_num\" value="+next_page+" ><input type=\"hidden\" name=\"blog_pubdate\" value=\'"+newDate+"\' ><button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\">Next</button></form>   ";
+			//console.log(total);
 			
 		}
 		return total;
@@ -90,13 +92,14 @@ var index = function(incoonn){
 		var query = conn.query("SELECT * FROM \"BLOG_POST\" WHERE \"SHOW\"=true ORDER BY \"DATE\" DESC LIMIT 10",callback);
 		return query;
 	};
-	function grabNextPosts(blog_id, page, callback){ 
+	function grabNextPosts(blog_pubdate, page, callback){ 
 		var startPt = page * 10;
- 		var query = conn.query("SELECT * FROM \"BLOG_POST\" WHERE \"SHOW\"=true ORDER BY \"DATE\" DESC LIMIT 10 OFFSET "+startPt,callback);
+ 		var query = conn.query("SELECT * FROM \"BLOG_POST\" WHERE \"SHOW\"=true AND \"DATE\"<=\'"+blog_pubdate+"\' ORDER BY \"DATE\" DESC LIMIT 10 ",callback);
 		return query;
 		 
 	};
 	
+ 
 	return  {
 		indexfile:indexfile,
 		grabNext:grabNext

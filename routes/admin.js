@@ -123,7 +123,7 @@ var admin = function(inconn){
 					 
 					//$('#content').append("<p>"+json2html.transform(JSON.stringify(item),transform) );
 					//insert blog posts
-					console.log(blog_id+" "+ item.link+" "+ item.pubdate+" "+item.guid+" "+ user_id);
+					//console.log(blog_id+" "+ item.link+" "+ item.pubdate+" "+item.guid+" "+ user_id);
 					insertBlogPost(JSON.stringify(item), show, blog_id, item.link, item.pubdate, item.guid, user_id, 
 						function(err, result){
 							if(err){
