@@ -23,7 +23,7 @@ var admin = new require('./routes/admin.js').admin(conn);
 var indexpg =new require('./routes/index.js').index(conn);
 var menu = new require('./routes/menu').menu(authpath, conn);
 
-var scanner = new require('./scanner').menu(conn);			
+var scanner = new require('./scanner').scanner(conn);			
 scanner.startScanner();					
 					
 // passport to control sessions and whatnot
