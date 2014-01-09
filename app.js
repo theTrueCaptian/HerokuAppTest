@@ -22,7 +22,10 @@ var authpath = new require('./routes/authentication').authentication(conn);
 var admin = new require('./routes/admin.js').admin(conn);
 var indexpg =new require('./routes/index.js').index(conn);
 var menu = new require('./routes/menu').menu(authpath, conn);
-								
+
+var scanner = new require('./scanner').menu(conn);			
+scanner.startScanner();					
+					
 // passport to control sessions and whatnot
 var passport = require('passport')
 	  , LocalStrategy = require('passport-local').Strategy;
