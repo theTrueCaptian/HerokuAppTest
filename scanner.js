@@ -65,10 +65,11 @@ var scanner = function(incoonn, inrssparser){
   				console.log(blog_id +":"+JSON.stringify(item["guid"]) ); //store the text of the guid
 				var guidHolder = item["guid"];
 				var guid;
-				if(guidHolder["text"]==null){//when some guids are not placed in the text propoerty just take the guidHolder data
-					guid= guidHolder;
-				}else{
+				if(guidHolder.text){	
 					guid= guidHolder["text"];
+					
+				}else{//when some guids are not placed in the text propoerty just take the guidHolder data
+					guid= guidHolder;
 				}
 				 
 				//should add to database if guid and blog id aren't the same

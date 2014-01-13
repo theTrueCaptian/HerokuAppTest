@@ -27,7 +27,7 @@ var menu = new require('./routes/menu').menu(authpath, conn);
 
 
 var scanner = new require('./scanner').scanner(conn, rssParser);			
-scanner.startScanner();		
+//scanner.startScanner();		
 setInterval(function() { scanner.startScanner();	 }, 60000);			
 					
 // passport to control sessions and whatnot
