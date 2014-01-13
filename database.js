@@ -1,5 +1,5 @@
 //Maeda Hanafi
-//server version of a flying shape object
+//db file
 
 var database = function(inconnectionString){
 	var connectionString = inconnectionString;	
@@ -41,7 +41,7 @@ var database = function(inconnectionString){
 	};
 	
 	var databaseConnect = function(){
-		//DAtabase connection***************************************************************
+		//DAtabase connection*
 		client = new pg.Client(connectionString);
 		//client.on('drain', client.end.bind(client)); //disconnect client when all queries are finished
   
@@ -84,6 +84,14 @@ var database = function(inconnectionString){
 		client.end();
 	};
 
+	//remember jsonContent is the stringified of a JSON of a blog post content
+ 	function insertBlogPost(jsonContent, show, blog_id, link, date, guid, user_id, callback){		
+		//2013-12-23T14:57:28.000Z
+		//var query = conn.query("INSERT INTO \"BLOG_POST\" (\"CONTENT\", \"SHOW\", \"BLOG_ID\", \"LINK\", \"DATE\", \"GUID\", \"USER_ID\") VALUES (\'"+jsonContent+"\', "+show+", "+blog_id+", \'"+link+"\', \'"+date+"\',\'"+guid+"\', "+user_id+");" , callback);
+		var query = queryParam("INSERT INTO \"BLOG_POST\" (\"CONTENT\", \"SHOW\", \"BLOG_ID\", \"LINK\", \"DATE\", \"GUID\", \"USER_ID\") VALUES ($1, $2, $3, $4, $5,$6,$7);" , [jsonContent, show, blog_id, link, date, guid, user_id],callback);
+		
+		return query;
+	};
 	return  {
 		getConnectionString: getConnectionString,
 		setConnectionString: setConnectionString,
@@ -91,7 +99,8 @@ var database = function(inconnectionString){
 		getBlogLinks:getBlogLinks,
 		closeConnection:closeConnection,
 		query:query,
-		queryParam:queryParam
+		queryParam:queryParam,
+		insertBlogPost:insertBlogPost
 		}
 };
 //allow others to access this file

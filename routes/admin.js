@@ -1,9 +1,13 @@
-
-var admin = function(inconn){
+//Maeda Hanafi
+//deals with admin stuff
+//routes to main admin page
+//takes in db conn and rss parser
+var admin = function(inconn, inscanner){
 	var fs=require('fs');
 	var ejs = require('ejs');
  
 	var conn = inconn; //database connection
+	var rssParser = inscanner;	//scanner that scans an rss
  	var regions, blogs, posts;
 	
 	var init=function(app){
@@ -11,9 +15,6 @@ var admin = function(inconn){
  	};
 	 
 	function adminmain(req, res){
-		var file=__dirname+'/../views/admin.ejs';
-		console.log('\t :: Express :: file requested : ' + file+' '+req.path);
-		var ejs_file = fs.readFileSync(file, 'utf-8');
 		
 		getAllRegions(
 			function(err, result){	//callback for getting all regions
@@ -31,19 +32,20 @@ var admin = function(inconn){
 										console.log(""+err);											
 										if(result3.rowCount>=1){
 											posts = result3.rows; 
- 											var page_html = ejs.render(ejs_file, { region:regions, blog:blogs, post:posts});
-											res.render('layout', {body:page_html});
+ 											sendLayout(req, res, regions, blogs, posts);
 										}else{
-											var page_html = ejs.render(ejs_file, { region:regions, blog:blogs, post:[]});
-											res.render('layout', {body:page_html});
+											//var page_html = ejs.render(ejs_file, { region:regions, blog:blogs, post:[]});
+											//res.render('layout', {body:page_html});
+											sendLayout(req, res,regions, blogs, []);
 										}
 									}
 								);
 								
 								
 							}else{
-								var page_html = ejs.render(ejs_file, { region:regions, blog:[], post:[]});
-								res.render('layout', {body:page_html});
+								//var page_html = ejs.render(ejs_file, { region:regions, blog:[], post:[]});
+								//res.render('layout', {body:page_html});
+								sendLayout(req, res, regions, [], [] );
 							}
 						}					
 					);
@@ -55,6 +57,20 @@ var admin = function(inconn){
  			}		
 		);
 		
+	};
+	
+	function sendLayout(req,res, inregion, inblog, inpost){
+		var file=__dirname+'/../views/admin.ejs';
+		console.log('\t :: Express :: file requested : ' + file+' '+req.path);
+		var ejs_file = fs.readFileSync(file, 'utf-8');
+		
+		var file2=__dirname+'/../views/adminSideMenu.ejs';
+ 		var ejs_file2 = fs.readFileSync(file2, 'utf-8');		
+		var rendersidemenu = ejs.render(ejs_file2, {});
+		
+		
+		var page_html = ejs.render(ejs_file, { region:inregion, blog:inblog, post:inpost, adminSideMenu:rendersidemenu});
+		res.render('layout', {body:page_html});
 	};
 	
 	//called when an rss link is added
@@ -83,7 +99,7 @@ var admin = function(inconn){
 													var blog_id = result3.rows[0]; 
 													console.log("blog_id id:"+blog_id["BLOG_ID"]);
 													//scan and insert its blog post
-													grabByURL(req.body.show, blog_id["BLOG_ID"], req.body.link, 4);
+													rssParser.grabByURL(req.body.show, blog_id["BLOG_ID"], req.body.link, 4);
 												}
 											}
 										}									
@@ -101,41 +117,12 @@ var admin = function(inconn){
 		);
 	};
 	
+	function regionDashboard(req, res){
+		//send user the region dashboard file***********************WORK ON THIS
+	};
  
 	//placing the blog posts inside the db
- 	function grabByURL(show, blog_id, URL, user_id ){
-		var FeedParser = require("feedparser");
-		var request = require('request');
-		  
-		request(URL)
-			.pipe(new FeedParser())
-			.on('error', function (error) {
-				console.error(error);
-			})
-			.on('meta', function (meta) {
-				//console.log('===== %s =====', meta.title);
-				
-			})
-			.on('readable', function() {
-				var stream = this, item;
-					
-				while (item = stream.read()) {
-					 
-					//$('#content').append("<p>"+json2html.transform(JSON.stringify(item),transform) );
-					//insert blog posts
-					//console.log(blog_id+" "+ item.link+" "+ item.pubdate+" "+item.guid+" "+ user_id);
-					insertBlogPost(JSON.stringify(item), show, blog_id, item.link, item.pubdate, item.guid, user_id, 
-						function(err, result){
-							if(err){
-								console.log(""+err);
-							};
-						}
-					);
-				}
-				  
-		});
-		
-	};
+
  
 	function deleteRSS(req, res){
 		deleteBlogByBlogId(req.body.blog_id,
@@ -168,7 +155,7 @@ var admin = function(inconn){
 	};
 	
 	function findRegionByRegion(region, callback){
-		var query = conn.query("SELECT \"REGION_ID\" FROM \"REGION\" WHERE \"REGION\"=\'"+region+"\'",callback);
+		var query = conn.queryParam("SELECT \"REGION_ID\" FROM \"REGION\" WHERE \"REGION\"= $1",[region],callback);
 		return query;
 	};
 	
@@ -185,20 +172,20 @@ var admin = function(inconn){
 		return query;
 	};
 	
-	function insertBlogPost(jsonContent, show, blog_id, link, date, guid, user_id, callback){		
+	/*function insertBlogPost(jsonContent, show, blog_id, link, date, guid, user_id, callback){		
 		//2013-12-23T14:57:28.000Z
 		//var query = conn.query("INSERT INTO \"BLOG_POST\" (\"CONTENT\", \"SHOW\", \"BLOG_ID\", \"LINK\", \"DATE\", \"GUID\", \"USER_ID\") VALUES (\'"+jsonContent+"\', "+show+", "+blog_id+", \'"+link+"\', \'"+date+"\',\'"+guid+"\', "+user_id+");" , callback);
 		var query = conn.queryParam("INSERT INTO \"BLOG_POST\" (\"CONTENT\", \"SHOW\", \"BLOG_ID\", \"LINK\", \"DATE\", \"GUID\", \"USER_ID\") VALUES ($1, $2, $3, $4, $5,$6,$7);" , [jsonContent, show, blog_id, link, date, guid, user_id],callback);
 		
 		return query;
-	};
+	};*/
 	 
 	return  {
 		init:init ,
 		adminmain:adminmain,
 		addRSS:addRSS,
 		deleteRSS:deleteRSS,
-		
+		regionDashboard:regionDashboard
 		}
 };
 //allow others to access this file

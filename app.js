@@ -18,13 +18,17 @@ var db = require('./database').database;
 var conn = new db(connectionString);
 conn.databaseConnect();
 
+//The rest of the .js that need db connection
 var authpath = new require('./routes/authentication').authentication(conn);
-var admin = new require('./routes/admin.js').admin(conn);
+var rssParser = new require('./rss').rss(conn);
+var admin = new require('./routes/admin.js').admin(conn, rssParser);
 var indexpg =new require('./routes/index.js').index(conn);
 var menu = new require('./routes/menu').menu(authpath, conn);
 
-var scanner = new require('./scanner').scanner(conn);			
-scanner.startScanner();					
+
+var scanner = new require('./scanner').scanner(conn, rssParser);			
+scanner.startScanner();		
+setInterval(function() { scanner.startScanner();	 }, 60000);			
 					
 // passport to control sessions and whatnot
 var passport = require('passport')
@@ -53,6 +57,8 @@ app.use(app.router);
 //admin routing
 admin.init(app);
 app.all('/admin', authpath.ensureAdmin);
+app.all('/manageRegion', authpath.ensureAdmin);
+app.get('/manageRegion', admin.regionDashboard);
 app.get('/admin', admin.adminmain);
 app.post('/addRSS', admin.addRSS);
 app.post('/deleteBlog', admin.deleteRSS);
