@@ -61,7 +61,7 @@ var scanner = function(incoonn, inrssparser){
 		});*/
 		  
 		reader.on('item', function(item) {
-			if(item){ 
+			if(item && item.guid){ 
   				console.log(blog_id +":"+JSON.stringify(item["guid"]) ); //store the text of the guid
 				var guidHolder = item["guid"];
 				var guid;
