@@ -97,8 +97,7 @@ var scanner = function(incoonn, inrssparser){
 		});
 		
 		reader.on('error',function(e){
-		   console.log("Error: " + hostNames[i] + "\n" + e.message); 
-		   console.log( e.stack );
+ 		   console.log( e.stack );
 		});
 		reader.start();
 		readers.push(reader);
