@@ -62,7 +62,7 @@ var scanner = function(incoonn, inrssparser){
 		  
 		reader.on('item', function(item) {
 			if(item && item.guid){ 
-  				console.log(blog_id +":"+JSON.stringify(item["guid"]) ); //store the text of the guid
+  				console.log("SCANNED:"+blog_id +":"+JSON.stringify(item["guid"]) ); //store the text of the guid
 				var guidHolder = item["guid"];
 				var guid;
 				if(guidHolder.text){	
@@ -75,13 +75,13 @@ var scanner = function(incoonn, inrssparser){
 				//should add to database if guid and blog id aren't the same
 				 findBlogPostByGuidAndBlogId(guid, blog_id, function(err, result){
 					if(err){
-						console.log(err);
+						console.log("SCANNED ERROR:"+err);
 					}else if(result.rowCount>=1){
-						console.log("Already in database! "+guid);
+						console.log("SCANNED: Already in database! "+guid);
 					}else{
 						//add the content to db
 						//console.log("We shall add this to the database! "+guid);
- 						console.log("We shall add this to the database! "+JSON.stringify(item));
+ 						console.log("SCANNED: We shall add this to the database! "+JSON.stringify(item));
  						rssParser.grabByURLAndGUID(show, blog_id, URL, guid, user_id );
  						/*conn.insertBlogPost(JSON.stringify(item), show, blog_id, item.link, item.pubdate, item.guid, user_id, 
 							function(err, result){
@@ -97,7 +97,7 @@ var scanner = function(incoonn, inrssparser){
 		});
 		
 		reader.on('error',function(e){
- 		   console.log( e.stack );
+ 		   console.log("SCANNED ERROR:"+ e.stack );
 		});
 		reader.start();
 		readers.push(reader);
