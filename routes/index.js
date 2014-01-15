@@ -119,13 +119,14 @@ var index = function(incoonn){
  			//console.log("setting blog date:"+last["DATE"]+" "+newDate);
 		 
 			//if not the first page, add a previous button
-			total = total+"<p>";
+			total = total+"<p><div class=\"row\">";
 			if(page_num!=1){
-				total = total + "<form role=\"previous\" action=\"/previous\" method=\"get\"><input type=\"hidden\" name=\"page_num\" value="+prev_page+" ><input type=\"hidden\" name=\"last_blog_id\" value="+last["BLOG_ID"]+" ><button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\">Previous</button></form>  ";
+				total = total + "<form role=\"previous\" action=\"/previous\" method=\"get\"><input type=\"hidden\" name=\"page_num\" value="+prev_page+" ><input type=\"hidden\" name=\"last_blog_id\" value="+last["BLOG_ID"]+" ><button class=\"btn btn-primary pull-left\" type=\"submit\">Previous</button></form>  ";
 			}
 			
-			total = total + "<form role=\"next\" action=\"/next\" method=\"get\"><input type=\"hidden\" name=\"page_num\" value="+next_page+" ><input type=\"hidden\" name=\"last_blog_id\" value="+last["BLOG_ID"]+" ><input type=\"hidden\" name=\"blog_pubdate\" value=\'"+newDate+"\' ><button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\">Next</button></form>   ";
+			total = total + "<form role=\"next\" action=\"/next\" method=\"get\"><input type=\"hidden\" name=\"page_num\" value="+next_page+" ><input type=\"hidden\" name=\"last_blog_id\" value="+last["BLOG_ID"]+" ><input type=\"hidden\" name=\"blog_pubdate\" value=\'"+newDate+"\' ><button class=\"btn btn-primary pull-right\" type=\"submit\">Next</button></form>   ";
 			
+			total = total + "</div>";
 			//console.log(total);
 			
 		}
