@@ -1,6 +1,6 @@
  
- //Maeda Hanafi
-//continuously scan the rss
+//Maeda Hanafi
+//Continuously scan the rss links from the database
 
 var scanner = function(incoonn, inrssparser){
 	var conn = incoonn;

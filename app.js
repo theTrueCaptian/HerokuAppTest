@@ -21,15 +21,19 @@ conn.databaseConnect();
 //The rest of the .js that need db connection
 var authpath = new require('./routes/authentication').authentication(conn);
 var rssParser = new require('./rss').rss(conn);
+var globalfeed = new require('./globalfeed').globalfeed(conn);
 var admin = new require('./routes/admin.js').admin(conn, rssParser);
-var indexpg =new require('./routes/index.js').index(conn);
+var indexpg =new require('./routes/index.js').index(conn, globalfeed);
 var menu = new require('./routes/menu').menu(authpath, conn);
 
 
 var scanner = new require('./scanner').scanner(conn, rssParser);			
-//scanner.startScanner();		
-setInterval(function() { scanner.startScanner();	 }, 300000);			
-					
+ //scan every 5 minutes	
+scanner.init(); 
+//setInterval(function() { scanner.startScanner();	 }, 300000);			
+
+ 
+	
 // passport to control sessions and whatnot
 var passport = require('passport')
 	  , LocalStrategy = require('passport-local').Strategy;
@@ -71,6 +75,7 @@ if ('development' == app.get('env')) {
 app.get('/' , indexpg.indexfile);
 app.get( '/index', indexpg.indexfile);
 app.get( '/next', indexpg.grabNext);
+app.get( '/previous', indexpg.grabPrevious);
 app.get('/aboutus', menu.aboutus);
 app.get('/faq', menu.faq);
 app.get('/directory', menu.directory);
