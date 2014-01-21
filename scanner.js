@@ -5,7 +5,31 @@
 var scanner = function(incoonn, inrssparser){
 	var conn = incoonn;
 	var rssParser = inrssparser;
-	var MAX_HISTORY = 100;
+	var lastScanned;
+	var moment = require('moment');
+
+	//Must be called to start scanning every 5 minuts
+	function init(){
+		setInterval(function() { startScanner();	 }, 300000);			
+	};
+	
+	function startScanner(){
+		moment().format();
+		lastScanned = moment();
+		
+		//Grab All Links and corresponding blogID from the database, and scann that thing!
+		getAllBlogLinkAndBlogId(function(err, result){ 	//callback for grabbing all posts
+			if(result.rowCount>=1){
+				var resultrows = result.rows;
+ 				
+				resultrows.forEach(function(item){
+					 rssParser.scan(item["BLOG_ID"], item["LINK"], item["SHOW"], item["USER_ID"], lastScanned);
+					 //assignScanner(item["LINK"], , item["SHOW"], item["USER_ID"]);
+				});
+			}
+		});
+	};
+	/*var MAX_HISTORY = 100;
 	var readers = [];
 	
 	//scan an incomming url (needs to be done when a new link is added)
@@ -52,13 +76,7 @@ var scanner = function(incoonn, inrssparser){
 			requestOpts:{}
 		});
 
-		/*reader.on('items', function(item) {
-			if(item){ 
- 				item.forEach(function(one){
-					console.log(one);
-				});
-			} 
-		});*/
+	 
 		  
 		reader.on('item', function(item) {
 			if(item && item.guid){ 
@@ -73,7 +91,7 @@ var scanner = function(incoonn, inrssparser){
 				}
 				 
 				//should add to database if guid and blog id aren't the same
-				 findBlogPostByGuidAndBlogId(guid, blog_id, function(err, result){
+				findBlogPostByGuidAndBlogId(guid, blog_id, function(err, result){
 					if(err){
 						console.log("SCANNED ERROR:"+err);
 					}else if(result.rowCount>=1){
@@ -83,13 +101,7 @@ var scanner = function(incoonn, inrssparser){
 						//console.log("We shall add this to the database! "+guid);
  						console.log("SCANNED: We shall add this to the database! "+JSON.stringify(item));
  						rssParser.grabByURLAndGUID(show, blog_id, URL, guid, user_id );
- 						/*conn.insertBlogPost(JSON.stringify(item), show, blog_id, item.link, item.pubdate, item.guid, user_id, 
-							function(err, result){
-								if(err){
-									console.log(""+err);
-								};
-							}
-						);*/
+ 						 
 					}
 				});
 				 
@@ -102,13 +114,10 @@ var scanner = function(incoonn, inrssparser){
 		reader.start();
 		readers.push(reader);
  	};
-	
+	*/
 	
 	//Queries
-	function findBlogPostByGuidAndBlogId(guid,blog_id,callback){
-		var query = conn.queryParam("SELECT \"GUID\", \"BLOG_ID\" FROM \"BLOG_POST\" WHERE \"GUID\"=$1 AND \"BLOG_ID\"=$2", [guid,blog_id], callback);
-		return query;
-	};
+	
 	
 	function getAllBlogLinkAndBlogId(callback){
 		var query = conn.query("SELECT \"LINK\", \"BLOG_ID\", \"SHOW\", \"USER_ID\" FROM \"BLOGS\"",callback);
@@ -117,6 +126,7 @@ var scanner = function(incoonn, inrssparser){
 	 
 	
 	return  {
+		init:init,
 		 startScanner:startScanner
 	}
 };

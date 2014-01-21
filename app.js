@@ -30,7 +30,7 @@ var menu = new require('./routes/menu').menu(authpath, conn);
 var scanner = new require('./scanner').scanner(conn, rssParser);			
  //scan every 5 minutes	
 scanner.init(); 
-//setInterval(function() { scanner.startScanner();	 }, 300000);			
+
 
  
 	

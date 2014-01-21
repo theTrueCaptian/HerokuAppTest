@@ -92,6 +92,12 @@ var database = function(inconnectionString){
 		
 		return query;
 	};
+	
+	//Gets all blog posts given a blog id
+	function getBlogPostsByBlogId(blog_id, callback){
+		var query = queryParam("SELECT * FROM \"BLOG_POST\" WHERE \"BLOG_ID\"=$1",[blog_id], callback);
+		return query;
+	};
 	return  {
 		getConnectionString: getConnectionString,
 		setConnectionString: setConnectionString,
@@ -100,7 +106,8 @@ var database = function(inconnectionString){
 		closeConnection:closeConnection,
 		query:query,
 		queryParam:queryParam,
-		insertBlogPost:insertBlogPost
+		insertBlogPost:insertBlogPost,
+		getBlogPostsByBlogId:getBlogPostsByBlogId
 		}
 };
 //allow others to access this file
