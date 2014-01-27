@@ -72,30 +72,20 @@
 									<button class="btn btn-primary" type="submit">Delete</button>   
 								</form>
 							</td>
+							<td>
+								<form role="toggle" action="/toggleShowBlog" method="post">
+									<input type="hidden" name="blog_id" value=<%= item["BLOG_ID"] %> >
+									<input type="hidden" name="show" value=<%= !item["SHOW"] %> >
+									<button class="btn btn-primary" type="submit">Set to <%= !item["SHOW"] %></button>   
+								</form>
+							</td>		
 						</tr>
 					<% }) %>
 				<% } %>
 			</table>
 		</div>
 	</div>
-	<div class="panel panel-default">
-		<div class="panel-heading"> All Blog Posts</div>
-		<div class="panel-body">
-			<table>
-				<% if (post.length) { %>
-
-					<% post.forEach(function(item){ %>
-						<tr>
-						<% for(var columnName in item) {%>
-							<td> <%= item[columnName] %></td>
-						<% } %>
-							
-						</tr>
-					<% }) %>
-				<% } %>
-			</table>
-		</div>
-	</div>
+	 
 	</div> <!-- /container -->
 </body
 

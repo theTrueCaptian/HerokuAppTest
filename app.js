@@ -61,12 +61,18 @@ app.use(app.router);
 //admin routing
 admin.init(app);
 app.all('/admin', authpath.ensureAdmin);
-app.all('/manageRegion', authpath.ensureAdmin);
-app.get('/manageRegion', admin.regionDashboard);
 app.get('/admin', admin.adminmain);
 app.post('/addRSS', admin.addRSS);
 app.post('/deleteBlog', admin.deleteRSS);
-
+app.post('/toggleShowBlog', admin.toggleShowBlog);
+app.all('/manageRegion', authpath.ensureAdmin);
+app.get('/manageRegion', admin.regionDashboard);
+app.post('/deleteRegion', admin.deleteRegion);
+app.post('/addRegion', admin.addRegion);
+app.all('/manageBlogposts', authpath.ensureAdmin);
+app.get('/manageBlogposts', admin.blogpostDashboard);
+app.post('/toggleShow', admin.toggleShow);
+ 
 // development only
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
@@ -79,8 +85,7 @@ app.get( '/previous', indexpg.grabPrevious);
 app.get('/aboutus', menu.aboutus);
 app.get('/faq', menu.faq);
 app.get('/directory', menu.directory);
-//app.get('/views/*', menu.menu);
-//app.get('/users', user.list);
+ 
 
 
 app.get('/signin', authpath.signin);

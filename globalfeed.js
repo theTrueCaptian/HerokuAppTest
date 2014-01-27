@@ -6,28 +6,44 @@
 var GlobalFeed = function(inconn ){
 	var conn = inconn;	//db connection
 	var globalfeed = [];
-	var MAX_LENGTH = 1000;//Max number of latest posts that globalfeed can handle
+	var MAX_LENGTH = 1000;//Max number of latest posts that global feed can handle
+	
+	//Important for when too many users request the /index, global feed will eventually be empty
+	var MIN_REFRESH = 300000;//min milli secs until the next time to refresh the global feed
+	var moment = require('moment');
+	var lastUpdated;	//Last time global feed was updated
 	 
-	 // Load the latest MAX_LENGTH posts into globalfeed. 
+	 // Load the latest MAX_LENGTH posts into global feed. 
 	 // Used on first load or when an update occurs (should be called by rss scanner
 	function loadLatestPosts(  onDone){
+		
 		//Grab all posts
-		grabAllPosts(function(err, result){	//Callback for PSQL query
+		grabAllShowablePosts(function(err, result){	//Callback for PSQL query
 			if(err){ 
 				console.log(""+err);
 			}else{
-				//Clear entries
-				globalfeed = [];
-				var resultrows = result.rows;
+				//Get the time now
+				moment().format();
+				var now = moment();
 				
- 				for(var i = 0 ; i <MAX_LENGTH; i++) {
-					if(i== result.rowCount){	//Make sure we dont go beyond the number of results given.  
- 						//console.log("Break!");
-						break;
+				if(globalfeed.length==0 || now-lastUpdated>=MIN_REFRESH){	//Refresh either when the min gap is passed or global feed is empty
+					//Clear entries
+					globalfeed = [];
+					var resultrows = result.rows;
+					
+					for(var i = 0 ; i <MAX_LENGTH; i++) {
+						if(i== result.rowCount){	//Make sure we dont go beyond the number of results given.  
+							//console.log("Break!");
+							break;
+						};
+						globalfeed[i]=(resultrows[i]);
 					};
-					globalfeed[i]=(resultrows[i]);
-  				};
-				onDone( );
+					onDone( );
+					lastUpdated = moment();
+				}else{
+					console.log("Refresh of global feed is too soon!");
+					onDone( );
+				}
    			}
 		});
 	};
@@ -112,8 +128,11 @@ var GlobalFeed = function(inconn ){
 		return temp;
 	};
 	
-	function grabAllPosts ( callback){		 
-		var query = conn.query("(SELECT * FROM \"BLOG_POST\" WHERE \"SHOW\"=true ORDER BY \"DATE\" DESC) ",callback);
+	//This grabs all posts where both its blog and blog_post show=true
+	function grabAllShowablePosts ( callback){		 
+		//var query = conn.query("SELECT * FROM (SELECT * FROM \"BLOG_POST\" WHERE \"SHOW\"=true ORDER BY \"DATE\" DESC) AS TABLE, \"BLOGS\" WHERE \"BLOGS\".\"SHOW\"=true ",callback);
+		var query = conn.query("SELECT * FROM \"BLOG_POST\" INNER JOIN \"BLOGS\" ON \"BLOGS\".\"BLOG_ID\"=\"BLOG_POST\".\"BLOG_ID\" WHERE \"BLOGS\".\"SHOW\" = true AND \"BLOG_POST\".\"SHOW\" = true ORDER BY \"DATE\" DESC",callback);
+		
 		return query;
 	};
  

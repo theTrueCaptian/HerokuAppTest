@@ -120,7 +120,7 @@ var scanner = function(incoonn, inrssparser){
 	
 	
 	function getAllBlogLinkAndBlogId(callback){
-		var query = conn.query("SELECT \"LINK\", \"BLOG_ID\", \"SHOW\", \"USER_ID\" FROM \"BLOGS\"",callback);
+		var query = conn.query("SELECT \"LINK\", \"BLOG_ID\", \"SHOW\", \"USER_ID\" FROM \"BLOGS\" WHERE \"SHOW\"=true",callback);
 		return query;
 	};
 	 

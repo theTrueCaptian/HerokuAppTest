@@ -11,7 +11,7 @@ var index = function(incoonn, infeed){
  	var PAGE_LIMIT = 10;
 	
 	var json2html = require('node-json2html'); 
-	var transform = {'tag':'p','html':'<div class=".col-md-4" ><div class="text-center"><div class="panel panel-default"><div class="panel-heading"><h2>${title} <p><h3> By ${author}</h3></h2></div> <div class="panel-body"> <p><div class=""> ${description} <p><a href=${link} target="_blank"><button class="btn btn-primary btn-block " type=\"submit\">More...</button></a></div> <div class="panel-footer"><p><bold>Blog source: ${link}</bold> <p> Date Published: ${pubdate}</div></div></div></div></div>'};
+	var transform = {'tag':'p','html':'<div class=".col-md-4" ><div class="text-center"><div class="panel panel-default"><div class="panel-heading"><h2>${title} <p><h3> By ${author}</h3></h2></div> <div class="panel-body"> <p><div class=""> ${description} <p><!--<a href=${link} target="_blank"><button class="btn btn-primary btn-block " type=\"submit\">More...</button></a>--></div> <div class="panel-footer"><p><bold>Blog source: ${link}</bold> <p> Date Published: ${pubdate}</div></div></div></div></div>'};
 		
 	var currentRes;	//used to point at current res 
 	

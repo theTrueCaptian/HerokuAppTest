@@ -1,0 +1,48 @@
+<html>
+	<!-- Bootstrap core CSS -->
+    <link href="/stylesheets/bootstrap.css" rel="stylesheet">
+	<!--<script type="text/javascript" src="./node_modules/ejs/ejs.js"></script>-->
+<body>
+	<%-    adminSideMenu %>
+	<div class="container">
+	<p>
+	<div class="panel panel-default">
+		<div class="panel-heading">Log Out</div>
+		<div class="panel-body">
+		<form role="logout" action="/logout" method="get">
+ 			<button class="btn btn-primary" type="submit">Log Out</button>   
+		</form>
+		</div>
+	</div>
+	<p>
+	 
+	<div class="panel panel-default">
+		<div class="panel-heading"> All Blog Posts</div>
+		<div class="panel-body">
+			<table>
+				<% if (blogpost.length) { %>
+
+					<% blogpost.forEach(function(item){ %>
+						<tr>
+							<td>
+								<form role="toggle" action="/toggleShow" method="post">
+									<input type="hidden" name="blogpost_id" value=<%= item["BLOG_POST_ID"] %> >
+									<input type="hidden" name="show" value=<%= !item["SHOW"] %> >
+									<button class="btn btn-primary" type="submit">Set to <%= !item["SHOW"] %></button>   
+								</form>
+							</td>											
+						<% for(var columnName in item) {%>
+							<td> <%= item[columnName] %></td>
+						<% } %>
+							
+						</tr>
+					<% }) %>
+				<% } %>
+			</table>
+		</div>
+	</div>
+	</div> <!-- /container -->
+</body
+
+
+</html>

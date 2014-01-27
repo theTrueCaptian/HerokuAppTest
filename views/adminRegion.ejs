@@ -1,0 +1,58 @@
+<html>
+	<!-- Bootstrap core CSS -->
+    <link href="/stylesheets/bootstrap.css" rel="stylesheet">
+	<!--<script type="text/javascript" src="./node_modules/ejs/ejs.js"></script>-->
+<body>
+	<%-    adminSideMenu %>
+	<div class="container">
+	<p>
+	<div class="panel panel-default">
+		<div class="panel-heading">Log Out</div>
+		<div class="panel-body">
+		<form role="logout" action="/logout" method="get">
+ 			<button class="btn btn-primary" type="submit">Log Out</button>   
+		</form>
+		</div>
+	</div>
+	<p>
+	<div class="panel panel-default">
+		<div class="panel-heading"> Add a New Region/Language</div>
+		<div class="panel-body">
+			<form role="form" action="/addRegion" method="post">
+				Region Name <input type="text" class="form-control" placeholder="Region Name" required autofocus name="region_name">
+				
+				<button class="btn btn-lg btn-primary btn-block" type="submit">Add New Region</button>   
+				
+				 
+			</form>
+		</div>
+	</div>
+	<div class="panel panel-default">
+		<div class="panel-heading"> All Regions</div>
+		<div class="panel-body">
+			<table>
+				<% if (region.length) { %>
+
+					<% region.forEach(function(item){ %>
+						<tr>
+							<% for(var columnName in item) {%>
+								<td> <%= item[columnName] %></td>
+							<% } %>
+							<td> 
+								<form role="delete" action="/deleteRegion" method="post">
+									<input type="hidden" name="region_id" value=<%= item["REGION_ID"] %> >
+									<button class="btn btn-primary" type="submit">Delete</button>   
+								</form>
+							</td>
+						</tr>
+					<% }) %>
+				<% } %>
+			</table>
+		</div>
+	</div>
+	 
+	</div> <!-- /container -->
+</body
+
+
+</html>
