@@ -114,7 +114,7 @@ var rss = function(incoonn){
 	
 	//Adds a blogpost into the db but first checks if there exists one already based on guid
 	function addBlogPost(item, blog_id, show, user_id){
-		findBlogPostByGuidAndBlogId(item.guid, blog_id, function(err, result){//Callback for any blog_post given guid and blog_id
+		conn.findBlogPostByGuidAndBlogId(item.guid, blog_id, function(err, result){//Callback for any blog_post given guid and blog_id
 			if(err){
 				console.log("SCANNED ERROR:"+err);
 			}else if(result.rowCount>=1){
@@ -141,10 +141,10 @@ var rss = function(incoonn){
 		return false;
 	}
 	
-	function findBlogPostByGuidAndBlogId(guid,blog_id,callback){
+	/*function findBlogPostByGuidAndBlogId(guid,blog_id,callback){
 		var query = conn.queryParam("SELECT \"GUID\", \"BLOG_ID\" FROM \"BLOG_POST\" WHERE \"GUID\"=$1 AND \"BLOG_ID\"=$2", [guid,blog_id], callback);
 		return query;
-	};
+	};*/
 	
 	return  {
 		grabByURL:grabByURL,

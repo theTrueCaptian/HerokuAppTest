@@ -25,7 +25,6 @@ var index = function(incoonn, infeed){
 	
 	 
 	var indexfile  = function(req, res){
-		 
 		currentRes = res;
 		globalfeed.loadLatestPosts(getFirstTen);
 		
@@ -52,7 +51,7 @@ var index = function(incoonn, infeed){
 		//find the post with that blog_id from globalfeed, and get the first ten before it
 	
 		var nextprevposts  = globalfeed.getPrevious(parseInt(req.query.last_blog_id), PAGE_LIMIT);
-		console.log("getting prev posts"+nextprevposts.length );
+		//console.log("getting prev posts"+nextprevposts.length );
 		sendFile(display(nextprevposts, false), res);
 	};
 	
@@ -63,7 +62,9 @@ var index = function(incoonn, infeed){
 		var last = showPosts[showPosts.length-1];
 		
 		showPosts.forEach(function(item){
-			total = total + "<p>"+json2html.transform(item["CONTENT"],transform) ;
+			if(item){
+				total = total + "<p>"+json2html.transform(item["CONTENT"],transform) ;
+			}
 		});
 		
 		//if not the first page, add a previous button

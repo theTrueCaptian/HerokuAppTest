@@ -254,14 +254,7 @@ var admin = function(inconn, inscanner){
 		return query;
 	};
 	
-	/*function insertBlogPost(jsonContent, show, blog_id, link, date, guid, user_id, callback){		
-		//2013-12-23T14:57:28.000Z
-		//var query = conn.query("INSERT INTO \"BLOG_POST\" (\"CONTENT\", \"SHOW\", \"BLOG_ID\", \"LINK\", \"DATE\", \"GUID\", \"USER_ID\") VALUES (\'"+jsonContent+"\', "+show+", "+blog_id+", \'"+link+"\', \'"+date+"\',\'"+guid+"\', "+user_id+");" , callback);
-		var query = conn.queryParam("INSERT INTO \"BLOG_POST\" (\"CONTENT\", \"SHOW\", \"BLOG_ID\", \"LINK\", \"DATE\", \"GUID\", \"USER_ID\") VALUES ($1, $2, $3, $4, $5,$6,$7);" , [jsonContent, show, blog_id, link, date, guid, user_id],callback);
-		
-		return query;
-	};*/
-	 function togglePostShowGivenPostId(postid, newshow, callback){		
+	function togglePostShowGivenPostId(postid, newshow, callback){		
 		var query = conn.queryParam("UPDATE \"BLOG_POST\" SET \"SHOW\"=$1 WHERE \"BLOG_POST_ID\"=$2;" , [newshow, postid] ,callback);
 		
 		return query;

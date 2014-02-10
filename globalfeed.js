@@ -18,7 +18,7 @@ var GlobalFeed = function(inconn ){
 	function loadLatestPosts(  onDone){
 		
 		//Grab all posts
-		grabAllShowablePosts(function(err, result){	//Callback for PSQL query
+		conn.grabAllShowablePosts(function(err, result){	//Callback for PSQL query
 			if(err){ 
 				console.log(""+err);
 			}else{
@@ -37,6 +37,7 @@ var GlobalFeed = function(inconn ){
 							break;
 						};
 						globalfeed[i]=(resultrows[i]);
+						//console.log(globalfeed[i]);
 					};
 					onDone( );
 					lastUpdated = moment();
@@ -48,6 +49,7 @@ var GlobalFeed = function(inconn ){
 		});
 	};
 	
+	
 	//Grab the first few posts for the main index page
 	//Called when index is called
 	//Returns an array of the latest few posts
@@ -55,7 +57,7 @@ var GlobalFeed = function(inconn ){
 		var temp = [];
 		for(var i = 0 ; i <limit; i++) {
 			temp[i] = globalfeed[i];
-			console.log(temp[i]);
+			//console.log(temp[i]);
 		}
 		return temp;
 	}
@@ -128,15 +130,6 @@ var GlobalFeed = function(inconn ){
 		return temp;
 	};
 	
-	//This grabs all posts where both its blog and blog_post show=true
-	function grabAllShowablePosts ( callback){		 
-		//var query = conn.query("SELECT * FROM (SELECT * FROM \"BLOG_POST\" WHERE \"SHOW\"=true ORDER BY \"DATE\" DESC) AS TABLE, \"BLOGS\" WHERE \"BLOGS\".\"SHOW\"=true ",callback);
-		var query = conn.query("SELECT * FROM \"BLOG_POST\" INNER JOIN \"BLOGS\" ON \"BLOGS\".\"BLOG_ID\"=\"BLOG_POST\".\"BLOG_ID\" WHERE \"BLOGS\".\"SHOW\" = true AND \"BLOG_POST\".\"SHOW\" = true ORDER BY \"DATE\" DESC",callback);
-		
-		return query;
-	};
- 
-	 
 	return  {
 			loadLatestPosts:loadLatestPosts,
 			getNext:getNext,

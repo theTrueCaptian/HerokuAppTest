@@ -35,7 +35,7 @@ var authentication = function(inconn){
 			function(usernameField, passwordField, done) {
 				console.log("pasport local strategy");
 				if(usernameField==adminName){
-					findPasswordByUsername(usernameField, passwordField,
+					conn.findPasswordByUsername(usernameField, passwordField,
 						function(err, result){
 							console.log(""+err);
 				
@@ -71,7 +71,7 @@ var authentication = function(inconn){
 		passport.deserializeUser(function(id, done) {
 			console.log('working on deserializin:d'+id);
 			
-			findUserByUserId(id, function(err, result){
+			conn.findUserByUserId(id, function(err, result){
 				console.log(""+err);
 				
 				if(result.rowCount==1){
@@ -89,23 +89,6 @@ var authentication = function(inconn){
 			
 			
 		});
-	};
-		
-	function findUserByUserId(userid, callback){
-		var query = conn.queryParam("SELECT * FROM \"Users\" WHERE \"USER_ID\"=$1;",[userid], callback);
-			
-		return query;
-		
-		
-	};
-	
-	function findPasswordByUsername(user, password, callback){
-		
-		var query = conn.queryParam("SELECT * FROM \"Users\" WHERE \"USERNAME\"=$1 AND \"PASSWORD\"=$2;",[user,password], callback);
-		
-		return query;
-		
-		
 	};
 
 	function ensureAdmin(req, res, next) {
@@ -156,19 +139,3 @@ exports.ensureAuthenticated = function ensureAuthenticated(req, res, next) {
 	res.redirect('/signin')
 };
   
-/*	
-var signin= function(req, res){
-	
-var fs=require('fs');
-var ejs = require('ejs');
-
-	//res.render('index', { title: 'The index page!' });
-	//var file = __dirname+'/../'+req.params[0]+'.ejs';//req.params[req.params.length-1];
- 	var file=__dirname+'/../views/signin.ejs';
-	console.log('\t :: Express :: file requested : ' + file+' '+req.path);
-	var ejs_file = fs.readFileSync(file, 'utf-8');
-	var page_html = ejs.render(ejs_file, { title: 'The index page!' });
-	res.render('layout', {body:page_html});
-};
-exports.signin = signin;*/
-//exports.login 

@@ -98,6 +98,57 @@ var database = function(inconnectionString){
 		var query = queryParam("SELECT * FROM \"BLOG_POST\" WHERE \"BLOG_ID\"=$1",[blog_id], callback);
 		return query;
 	};
+	
+	//This grabs all posts where both its blog and blog_post show=true
+	//Called by globalfeed
+	function grabAllShowablePosts ( callback){		 
+		var myquery = query("SELECT * FROM \"BLOG_POST\" INNER JOIN \"BLOGS\" ON \"BLOGS\".\"BLOG_ID\"=\"BLOG_POST\".\"BLOG_ID\" WHERE \"BLOGS\".\"SHOW\" = true AND \"BLOG_POST\".\"SHOW\" = true ORDER BY \"DATE\" DESC",callback);
+		
+		return myquery;
+	};
+	
+	//Called by rss.js******Needs to check if the callback works
+	function findBlogPostByGuidAndBlogId(guid,blog_id,callback){
+		var query = queryParam("SELECT \"GUID\", \"BLOG_ID\" FROM \"BLOG_POST\" WHERE \"GUID\"=$1 AND \"BLOG_ID\"=$2", [guid,blog_id], callback);
+		return query;
+	};
+	
+	//Call by scanner.js******Needs to check if the callback works
+	function getAllBlogLinkAndBlogId(callback){
+		var myquery = query("SELECT \"LINK\", \"BLOG_ID\", \"SHOW\", \"USER_ID\" FROM \"BLOGS\" WHERE \"SHOW\"=true",callback);
+		return myquery;
+	};
+	
+	//Call by authentcation.js
+	function findUserByUserId(userid, callback){
+		var query = queryParam("SELECT * FROM \"Users\" WHERE \"USER_ID\"=$1;",[userid], callback);
+		return query;
+	};
+	
+	//Call by authentcation.js
+	function findPasswordByUsername(user, password, callback){
+		var query = queryParam("SELECT * FROM \"Users\" WHERE \"USERNAME\"=$1 AND \"PASSWORD\"=$2;",[user,password], callback);
+		return query;
+	};
+
+	//Called by menu.js
+	function getAllBlogs(callback){
+		var myquery = query("SELECT \"BLOG_NAME\", \"LINK\" FROM \"BLOGS\" WHERE \"SHOW\"=true",callback);
+		return myquery;
+	};
+	
+	//Called by scanner.js for database limitation
+	function getAllBlogPosts(callback){
+		var myquery = query("SELECT * FROM \"BLOG_POST\"",callback);
+		return myquery;
+	};
+
+	//Called by scanner.js for database limitation
+	function deleteBlogPostsGivenDatePast(datepast, callback){
+		var query = queryParam("DELETE FROM \"BLOG_POST\" WHERE \"DATE\"<=$1",[datepast],callback);
+		return query;
+	};
+	
 	return  {
 		getConnectionString: getConnectionString,
 		setConnectionString: setConnectionString,
@@ -107,7 +158,15 @@ var database = function(inconnectionString){
 		query:query,
 		queryParam:queryParam,
 		insertBlogPost:insertBlogPost,
-		getBlogPostsByBlogId:getBlogPostsByBlogId
+		getBlogPostsByBlogId:getBlogPostsByBlogId,		
+		grabAllShowablePosts:grabAllShowablePosts,
+		findBlogPostByGuidAndBlogId:findBlogPostByGuidAndBlogId,
+		getAllBlogLinkAndBlogId:getAllBlogLinkAndBlogId,
+		findUserByUserId:findUserByUserId,
+		findPasswordByUsername:findPasswordByUsername,
+		getAllBlogs:getAllBlogs,
+		getAllBlogPosts:getAllBlogPosts,
+		deleteBlogPostsGivenDatePast:deleteBlogPostsGivenDatePast
 		}
 };
 //allow others to access this file
