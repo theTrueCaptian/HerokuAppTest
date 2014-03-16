@@ -201,7 +201,26 @@ var admin = function(inconn, inscanner){
 		
 		});
 	};
+	
+	//Web crawler management
+	function adminCrawler(req, res){
+		sendCrawlerLayout(req, res, []);
+	};
  	
+	function sendCrawlerLayout(req,res, searchres){
+		var file=__dirname+'/../views/adminCrawler.ejs';
+		console.log('\t :: Express :: file requested : ' + file+' '+req.path);
+		var ejs_file = fs.readFileSync(file, 'utf-8');
+		
+		var file2=__dirname+'/../views/adminSideMenu.ejs';
+ 		var ejs_file2 = fs.readFileSync(file2, 'utf-8');		
+		var rendersidemenu = ejs.render(ejs_file2, {});
+		
+		
+		var page_html = ejs.render(ejs_file, { result:searchres, adminSideMenu:rendersidemenu});
+		res.render('layout', {body:page_html});
+	};
+	
 	//Database Queries
 	function deleteBlogByBlogId(blog_id, callback){
 		var query = conn.queryParam("DELETE FROM \"BLOGS\" WHERE \"BLOG_ID\"=$1",[blog_id],callback);
@@ -275,7 +294,8 @@ var admin = function(inconn, inscanner){
 		deleteRegion:deleteRegion,
 		addRegion:addRegion,
 		blogpostDashboard:blogpostDashboard,
-		toggleShow:toggleShow
+		toggleShow:toggleShow,
+		adminCrawler:adminCrawler
  		}
 };
 //allow others to access this file

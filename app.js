@@ -72,6 +72,8 @@ app.post('/addRegion', admin.addRegion);
 app.all('/manageBlogposts', authpath.ensureAdmin);
 app.get('/manageBlogposts', admin.blogpostDashboard);
 app.post('/toggleShow', admin.toggleShow);
+app.all('/adminCrawler', authpath.ensureAdmin);
+app.get('/adminCrawler', admin.adminCrawler);
  
 // development only
 if ('development' == app.get('env')) {
