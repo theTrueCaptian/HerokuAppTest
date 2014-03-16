@@ -74,6 +74,7 @@ app.get('/manageBlogposts', admin.blogpostDashboard);
 app.post('/toggleShow', admin.toggleShow);
 app.all('/adminCrawler', authpath.ensureAdmin);
 app.get('/adminCrawler', admin.adminCrawler);
+app.post('/adminSearch', admin.adminSearch);
  
 // development only
 if ('development' == app.get('env')) {

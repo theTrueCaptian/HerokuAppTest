@@ -5,6 +5,7 @@
 var admin = function(inconn, inscanner){
 	var fs=require('fs');
 	var ejs = require('ejs');
+	var request = require('request');
  
 	var conn = inconn; //database connection
 	var rssParser = inscanner;	//scanner that scans an rss
@@ -122,6 +123,7 @@ var admin = function(inconn, inscanner){
 	};
 	
 	//Region Dashboard
+	//Response to GET region page 
 	function regionDashboard(req, res){
  		getAllRegions(function(err, result){	//callback for getting all regions
 			console.log(""+err);											
@@ -167,6 +169,7 @@ var admin = function(inconn, inscanner){
 	};
  
 	//Blogpost Management
+	//Response to GET blogposts page 
 	function blogpostDashboard(req, res){
  		getAllBlogPosts(function(err, result){	//callback for getting all regions
 			console.log(""+err);											
@@ -203,6 +206,7 @@ var admin = function(inconn, inscanner){
 	};
 	
 	//Web crawler management
+	//Respond to request for a GET request on the adminCrawler page
 	function adminCrawler(req, res){
 		sendCrawlerLayout(req, res, []);
 	};
@@ -219,6 +223,52 @@ var admin = function(inconn, inscanner){
 		
 		var page_html = ejs.render(ejs_file, { result:searchres, adminSideMenu:rendersidemenu});
 		res.render('layout', {body:page_html});
+	};
+	
+	function adminSearch(req, res){		
+		request(req.body.starting_pt, function (error, response, body) {
+		  if (!error && response.statusCode == 200) {
+			//console.log(body) // Print the google web page.
+			sendCrawlerLayout(req, res, getAllLinks(body));
+		  }
+		})
+	};
+	
+	//Searches for all a href tags in given htmlpage that comes in the form of string
+	//Returns an array of links
+	function getAllLinks(htmlpage){
+		var links = [];
+		var index = 0;
+		var once = 0;
+		
+		while(index>-1 && index<htmlpage.length){
+			var linktag = "<a href=";
+			var st = htmlpage.indexOf(linktag,index);
+			var end1 = htmlpage.indexOf('"',st+linktag.length+1);
+			var end2 = htmlpage.indexOf("'",st+linktag.length+1);
+						
+			//unless the a href tag uses single quotes, take the second end
+			if(end2<end1){
+				index = end2;
+				end = end2;
+			}else{
+				end = end1;
+				index = end1;//set new searching pt	
+			}
+				
+			//Make sure its not repeating the search
+			if(st<0)
+				break;
+				
+			//grab the link
+			var newlink = htmlpage.substring(st+linktag.length+1, end);
+			//console.log("found a new link from "+st+" to " +end+":"+newlink);
+			links.push(newlink);
+			
+			
+			
+		}
+		return	links;
 	};
 	
 	//Database Queries
@@ -295,7 +345,8 @@ var admin = function(inconn, inscanner){
 		addRegion:addRegion,
 		blogpostDashboard:blogpostDashboard,
 		toggleShow:toggleShow,
-		adminCrawler:adminCrawler
+		adminCrawler:adminCrawler,
+		adminSearch:adminSearch
  		}
 };
 //allow others to access this file
