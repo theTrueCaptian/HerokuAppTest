@@ -9,7 +9,8 @@ var GlobalFeed = function(inconn ){
 	var MAX_LENGTH = 1000;//Max number of latest posts that global feed can handle
 	
 	//Important for when too many users request the /index, global feed will eventually be empty
-	var MIN_REFRESH = 300000;//min milli secs until the next time to refresh the global feed
+ 	var MIN_REFRESH = 30000;//300000;//min milli secs until the next time to refresh the global feed
+	
 	var moment = require('moment');
 	var lastUpdated;	//Last time global feed was updated
 	 
@@ -26,7 +27,7 @@ var GlobalFeed = function(inconn ){
 				moment().format();
 				var now = moment();
 				
-				if(globalfeed.length==0 || now-lastUpdated>=MIN_REFRESH){	//Refresh either when the min gap is passed or global feed is empty
+				if(globalfeed.length<=0  || now-lastUpdated>=MIN_REFRESH){	//Refresh either when the min gap is passed or global feed is empty
 					//Clear entries
 					globalfeed = [];
 					var resultrows = result.rows;
@@ -42,7 +43,7 @@ var GlobalFeed = function(inconn ){
 					onDone( );
 					lastUpdated = moment();
 				}else{
-					console.log("Refresh of global feed is too soon!");
+					console.log("Refresh of global feed is too soon according to Min refresh!");
 					onDone( );
 				}
    			}

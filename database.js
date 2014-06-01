@@ -29,7 +29,7 @@ var database = function(inconnectionString){
 				console.log(result.rowCount + ' rows were received');
 				htmlSource = $.html();
 				res.send( htmlSource );
-				console.log($.html());
+				//console.log($.html());
 			})
 			
 
@@ -74,7 +74,7 @@ var database = function(inconnectionString){
 	};
 	var queryParam = function( queryString, param,callback){
 		var query = client.query(queryString, param,callback);// function(err, result) {
-		console.log("param querying:"+queryString+" "+param);
+		console.log("param querying:"+queryString+" "/*+param*/);
 				
 		return query;
 		
@@ -85,10 +85,10 @@ var database = function(inconnectionString){
 	};
 
 	//remember jsonContent is the stringified of a JSON of a blog post content
- 	function insertBlogPost(jsonContent, show, blog_id, link, date, guid, user_id, callback){		
+ 	function insertBlogPost(jsonContent, show, blog_id, link, date, guid, user_id, keywords, callback){		
 		//2013-12-23T14:57:28.000Z
 		//var query = conn.query("INSERT INTO \"BLOG_POST\" (\"CONTENT\", \"SHOW\", \"BLOG_ID\", \"LINK\", \"DATE\", \"GUID\", \"USER_ID\") VALUES (\'"+jsonContent+"\', "+show+", "+blog_id+", \'"+link+"\', \'"+date+"\',\'"+guid+"\', "+user_id+");" , callback);
-		var query = queryParam("INSERT INTO \"BLOG_POST\" (\"CONTENT\", \"SHOW\", \"BLOG_ID\", \"LINK\", \"DATE\", \"GUID\", \"USER_ID\") VALUES ($1, $2, $3, $4, $5,$6,$7);" , [jsonContent, show, blog_id, link, date, guid, user_id],callback);
+		var query = queryParam("INSERT INTO \"BLOG_POST\" (\"CONTENT\", \"SHOW\", \"BLOG_ID\", \"LINK\", \"DATE\", \"GUID\", \"USER_ID\", \"TAGS\") VALUES ($1, $2, $3, $4, $5,$6,$7,$8);" , [jsonContent, show, blog_id, link, date, guid, user_id, keywords],callback);
 		
 		return query;
 	};

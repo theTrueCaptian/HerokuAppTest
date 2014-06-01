@@ -9,7 +9,7 @@ var scanner = function(incoonn, inrssparser){
 	var moment = require('moment');
 	
 	var MAX_BLOG_POSTS = 2000;
-	var SCAN_GAP = 300000;
+	var SCAN_GAP = 300000; //5 minutes
 
 	//Must be called to start scanning every 5 minuts
 	function init(){
@@ -17,6 +17,8 @@ var scanner = function(incoonn, inrssparser){
 	};
 	
 	function startScanner(){
+	
+		console.log("Scanning");
 		moment().format();
 		lastScanned = moment();
 		
@@ -25,7 +27,9 @@ var scanner = function(incoonn, inrssparser){
 			if(result.rowCount>=1){
 				var resultrows = result.rows;
  				
+				//Scans each blog
 				resultrows.forEach(function(item){
+					//Calling this rssParser.scan would add a new blogpost along with its auto tags that are determined in rssParser.scan
 					 rssParser.scan(item["BLOG_ID"], item["LINK"], item["SHOW"], item["USER_ID"], lastScanned);
 				});
 			}
@@ -36,6 +40,7 @@ var scanner = function(incoonn, inrssparser){
 	};
 	
 	function limitation(){
+		console.log("Deciding on limitation");
 		//Limit the database
 		conn.getAllBlogPosts(function(err, result){ 	//callback for grabbing all posts
 			if(err){console.log(err);}

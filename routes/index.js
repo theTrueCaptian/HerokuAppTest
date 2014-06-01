@@ -1,7 +1,7 @@
 
 /*
  * GET home page.
-	Handles also Next and Previous page
+	Handles also Next and Previous page by interacting with globalfeed.js
  */
  //Maeda Hanafi
 
@@ -10,9 +10,10 @@ var index = function(incoonn, infeed){
 	var globalfeed = infeed;
  	var PAGE_LIMIT = 10;
 	
+	//Variables relating to converting the json format of blog posts  to html
 	var json2html = require('node-json2html'); 
-	var transform = {'tag':'p','html':'<div class=".col-md-4" ><div class="text-center"><div class="panel panel-default"><div class="panel-heading"><h2>${title} <p><h3> By ${author}</h3></h2></div> <div class="panel-body"> <p><div class=""> ${description} <p><!--<a href=${link} target="_blank"><button class="btn btn-primary btn-block " type=\"submit\">More...</button></a>--></div> <div class="panel-footer"><p><bold>Blog source: ${link}</bold> <p> Date Published: ${pubdate}</div></div></div></div></div>'};
-		
+	var transform = {'tag':'p','html':'<div class=".col-md-4" ><div class="text-center"><div class="panel panel-default"><div class="panel-heading"><h2>${title} <p><h3> By ${author}</h3></h2></div> <div class="panel-body"> <p><div class=""> ${description} <p><!--<a href=${link} target="_blank"><button class="btn btn-primary btn-block " type=\"submit\">More...</button></a>--></div> Tags: ${tags} <div class="panel-footer"><p><bold>Blog source: ${link}</bold> <p> Date Published: ${pubdate}</div></div></div></div></div>'};
+ 			
 	var currentRes;	//used to point at current res 
 	
 	function sendFile(inbody, res){
@@ -35,7 +36,7 @@ var index = function(incoonn, infeed){
 		sendFile(display(firstTen, true), currentRes);
 	};
 	
-	//grab the next set of posts based on a range of blog posts (requires an inner sql)
+	//grab the next set of posts based on a range of blog posts  
 	function grabNext(req, res){
 		currentRes = res;
 		
@@ -55,6 +56,7 @@ var index = function(incoonn, infeed){
 		sendFile(display(nextprevposts, false), res);
 	};
 	
+	//This function forms the HTML of the posts (from the database) that is to be shown on that page
 	function display(showPosts, isFirstPage){
 		var total ="";
 		
@@ -63,7 +65,27 @@ var index = function(incoonn, infeed){
 		
 		showPosts.forEach(function(item){
 			if(item){
-				total = total + "<p>"+json2html.transform(item["CONTENT"],transform) ;
+  				total = total + "<p>"+json2html.transform(item["CONTENT"],transform)+ item["TAGS"];
+				
+				//String to html 
+				var jsonitem = JSON.parse(item["CONTENT"]);	//Convert the string to json, when it is already in jsonformat
+				var description = jsonitem.description;
+				var author = jsonitem.author;
+				var title = jsonitem.title;
+				var link = jsonitem.link;
+				var pubdate = jsonitem.pubdate;
+				
+				//Now we have to automate paraphrasing the description to avoid copying other people's work****************
+				
+				
+				
+				//Here is an old version of the string to html method
+ 				/*total = total + "<p>"+ "<div class=\".col-md-4\" ><div class=\"text-center\"><div class=\"panel panel-default\"><div class=\"panel-heading\">"
+									+	"<h2>${title} <p><h3> By ${author}</h3></h2></div> <div class=\"panel-body\"> <p><div class=\"\"> "+description+"<p>"
+									+ 	"<!--<a href=${link} target=\"_blank\"><button class=\"btn btn-primary btn-block \" type=\"submit\">More...</button></a>-->"
+									+	"</div> Tags: ${categories} <div class=\"panel-footer\"><p><bold>Blog source: ${link}</bold> <p> Date Published: ${pubdate}"
+									+	"</div></div></div></div></div>";
+									*/
 			}
 		});
 		

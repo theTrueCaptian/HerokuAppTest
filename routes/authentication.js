@@ -40,10 +40,10 @@ var authentication = function(inconn){
 							console.log(""+err);
 				
 							if(result.rowCount==1){
-								var firstRow = result.rows[0];
+								/*var firstRow = result.rows[0];
 								for(var columnName in firstRow) {
 									console.log('column "%s" has a value of "%j"', columnName, firstRow[columnName]);
-								  }
+								  }*/
 								var user = result.rows[0];//JSON.stringify(result.rows[0]);//{id: result[0].USER_ID, type: result[0].USER_TYPE_ID, email: result[0].EMAIL, username: result[0].USERNAME};
 								//user.push({'adminStatusUser':true});
 								console.log('logging in the admin:'+user);

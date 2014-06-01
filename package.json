@@ -17,6 +17,8 @@
 	"request":"2.30.0",
  	"node-json2html":"0.4.1",
 	"moment":"2.5.0",
-	"simplecrawler":"0.3.6"
+	"simplecrawler":"0.3.6",
+	"glossary":"0.1.1",
+	"sanitizer":"0.1.1"
    }
 }

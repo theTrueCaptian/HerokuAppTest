@@ -211,6 +211,7 @@ var admin = function(inconn, inscanner){
 		sendCrawlerLayout(req, res, []);
 	};
  	
+	//Sends resulting webpage to user
 	function sendCrawlerLayout(req,res, searchres){
 		var file=__dirname+'/../views/adminCrawler.ejs';
 		console.log('\t :: Express :: file requested : ' + file+' '+req.path);
@@ -225,11 +226,11 @@ var admin = function(inconn, inscanner){
 		res.render('layout', {body:page_html});
 	};
 	
+	//Uses request to get html of the given webpage (starting_pt), and then send the results to user
 	function adminSearch(req, res){		
 		request(req.body.starting_pt, function (error, response, body) {
 		  if (!error && response.statusCode == 200) {
-			//console.log(body) // Print the google web page.
-			sendCrawlerLayout(req, res, getAllLinks(body));
+ 			sendCrawlerLayout(req, res, getAllLinks(body));
 		  }
 		})
 	};
